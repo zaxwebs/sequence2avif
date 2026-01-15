@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import threading
 import os
+from PIL import Image
 from convert import convert_images_to_avif
 
 class AVIFConverterGUI:
@@ -13,8 +14,9 @@ class AVIFConverterGUI:
         # Variables
         self.input_folder = tk.StringVar()
         self.output_file = tk.StringVar()
-        self.fps = tk.IntVar(value=30)
+        self.fps = tk.IntVar(value=24)
         self.quality = tk.IntVar(value=85)
+        self.width = tk.IntVar(value=0)
         self.status_var = tk.StringVar(value="Ready")
 
         self.create_widgets()
@@ -46,6 +48,11 @@ class AVIFConverterGUI:
         tk.Label(settings_frame, text="Quality (0-100):").grid(row=1, column=0, sticky="w", padx=5, pady=5)
         tk.Scale(settings_frame, from_=0, to=100, orient="horizontal", variable=self.quality).grid(row=1, column=1, sticky="we", padx=5, pady=5)
 
+        # Width
+        tk.Label(settings_frame, text="Width (px):").grid(row=2, column=0, sticky="w", padx=5, pady=5)
+        self.width_scale = tk.Scale(settings_frame, from_=1, to=100, orient="horizontal", variable=self.width, state="disabled")
+        self.width_scale.grid(row=2, column=1, sticky="we", padx=5, pady=5)
+
         settings_frame.columnconfigure(1, weight=1)
 
         # Convert Button
@@ -63,6 +70,24 @@ class AVIFConverterGUI:
         folder = filedialog.askdirectory()
         if folder:
             self.input_folder.set(folder)
+            self.scan_folder_for_width(folder)
+
+    def scan_folder_for_width(self, folder):
+        try:
+            files = [f for f in os.listdir(folder) if f.lower().endswith('.png')]
+            files.sort()
+            if files:
+                first_img_path = os.path.join(folder, files[0])
+                img = Image.open(first_img_path)
+                width = img.width
+                
+                self.width_scale.config(from_=1, to=width, state="normal")
+                self.width.set(width)
+            else:
+                self.width_scale.config(state="disabled")
+        except Exception as e:
+            print(f"Error scanning folder: {e}")
+            self.width_scale.config(state="disabled")
 
     def browse_output(self):
         file = filedialog.asksaveasfilename(defaultextension=".avif", filetypes=[("AVIF files", "*.avif")])
@@ -107,12 +132,22 @@ class AVIFConverterGUI:
         try:
             fps = self.fps.get()
             quality = self.quality.get()
+            width = self.width.get()
             
+            # If width is same as max (original), pass None to avoid resizing
+            if self.width_scale.cget("state") == "normal":
+                 original_width = self.width_scale.cget("to")
+                 if width == original_width:
+                     width = None
+            else:
+                width = None
+
             success = convert_images_to_avif(
                 input_folder, 
                 output_file, 
                 fps, 
                 quality, 
+                width=width,
                 progress_callback=self.update_progress
             )
             

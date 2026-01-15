@@ -30,7 +30,7 @@ python gui.py
 
 1. **Input Folder**: Select the folder containing your PNG sequence.
 2. **Output File**: Choose where to save the generated `.avif` file.
-3. **Settings**: Adjust FPS (def: 30) and Quality (def: 85).
+3. **Settings**: Adjust FPS (def: 24) and Quality (def: 85).
 4. **Convert**: Click the button and watch the progress!
 
 ### Command Line Interface (CLI)
@@ -38,13 +38,13 @@ python gui.py
 Use the script directly from your terminal:
 
 ```bash
-python convert.py "path/to/input_folder" "output/file.avif" --fps 30 --quality 85
+python convert.py "path/to/input_folder" "output/file.avif" --fps 24 --quality 85
 ```
 
 **Arguments:**
 - `input_folder`: Path to the folder containing .png images.
 - `output_file`: Path for the output .avif file.
-- `--fps`: (Optional) Frames Per Second. Default is 30.
+- `--fps`: (Optional) Frames Per Second. Default is 24.
 - `--quality`: (Optional) Quality from 0-100. Default is 85.
 
 ## Requirements
