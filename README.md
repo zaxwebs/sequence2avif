@@ -2,7 +2,7 @@
 
 A simple Python utility to convert a sequence of PNG images into an animated AVIF file. This tool provides both a Command Line Interface (CLI) and a Graphical User Interface (GUI).
 
-![apple avif](https://res.cloudinary.com/webster1000/image/upload/v1768469439/apple_cyr2kw.avif)
+<img src="https://res.cloudinary.com/webster1000/image/upload/v1768469439/apple_cyr2kw.avif" alt="apple avif" width="80">
 
 ## Features
 
@@ -54,4 +54,5 @@ python convert.py "path/to/input_folder" "output/file.avif" --fps 24 --quality 8
 - Python 3.x
 - `Pillow`
 - `pillow-avif-plugin`
+
 
